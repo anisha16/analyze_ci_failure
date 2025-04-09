@@ -1,0 +1,22 @@
+name: DevOps Pipeline with GenAI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Simulate failure
+        run: |
+          echo "Simulating a failure..."
+          exit 1
+
+      - name: Send logs to Lambda on failure
+        if: failure()
+        run: |
+          curl -X POST https://ysbzyn8z3k.execute-api.us-east-2.amazonaws.com/prod/analyze-ci-failure \
+            -H "Content-Type: application/json" \
+            -d "{\"logs\": \"Build failed in GitHub Actions during simulated step at $(date)\"}"
