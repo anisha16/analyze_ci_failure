@@ -1,22 +1,30 @@
-CI/CD Failure Analyzer with GenAI (OpenAI + AWS Lambda + Slack)
-This project uses AWS Lambda, OpenAI GPT-4, and Slack to automatically analyze CI/CD logs and send intelligent summaries + fix recommendations to Slack. It is ideal for teams that want to debug pipeline failures in real time using AI.
+**CI/CD Debugger using OpenAI and AWS Lambda**
+This project is an AI-powered Lambda function that receives CI/CD failure logs, analyzes them using OpenAI’s API, and sends a summarized explanation or potential fix to a configured Slack channel.
 
-Project Architecture
-GitHub Actions → AWS API Gateway → Lambda (Python) → OpenAI API → Slack Webhook
+**Project Overview**
 
-Setup Instructions
+The Lambda function acts as an automated CI/CD log analyzer. It integrates OpenAI’s GPT model to interpret build logs and returns useful feedback to help DevOps engineers debug faster. The feedback is then pushed to Slack for immediate visibility.
 
-1. Clone the repo
+**Prerequisites**
+	•	Docker installed and running
+	•	AWS account with access to Lambda (Python 3.11 runtime)
+	•	OpenAI API key
+	•	Slack Incoming Webhook URL
 
-   git clone
-   cd
-2. Add dependencies in requirements.txt
-3. Install dependencies for AWS Lambda architecture (Linux x86_64)
-   mkdir -p python
+**Workflow**
+	1.	A CI/CD pipeline failure sends the logs to this Lambda function (via an API Gateway or direct trigger).
+	2.	The function sends those logs to OpenAI GPT for summarization.
+	3.	OpenAI returns an explanation and suggestion.
+	4.	The result is posted in a Slack channel using a webhook.
 
-docker run --rm -v "$PWD":/var/task -w /var/task \
-  public.ecr.aws/sam/build-python3.11 \
-  pip install -r requirements.txt --platform manylinux2014_x86_64 \
-  --target python --upgrade --only-binary=:all:
-
-4. Add Lambda function
+**How to Run the Project**
+	1.	Clone this repository to your local machine.
+	2.	Install dependencies inside a Docker container for compatibility with AWS Lambda’s execution environment. Use a manylinux-compatible base for correct binary formats.
+	3.	Package the Lambda deployment ZIP file by combining:
+	•	lambda_function.py
+	•	All installed dependencies inside a python/ directory (flattened)
+	4.	Deploy the ZIP file to AWS Lambda using the AWS Console or CLI.
+	5.	Set environment variables in Lambda for:
+	•	OPENAI_API_KEY
+	•	SLACK_WEBHOOK
+	6.	Test the function by sending a mock CI/CD failure log event to it.
