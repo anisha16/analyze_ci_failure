@@ -1,4 +1,5 @@
 **CI/CD Debugger using OpenAI and AWS Lambda**
+
 This project is an AI-powered Lambda function that receives CI/CD failure logs, analyzes them using OpenAI’s API, and sends a summarized explanation or potential fix to a configured Slack channel.
 
 **Project Overview**
